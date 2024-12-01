@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: ms-naissances
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ms_naissances
+    username: root
+    password: Mad221122
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQLDialect
+
