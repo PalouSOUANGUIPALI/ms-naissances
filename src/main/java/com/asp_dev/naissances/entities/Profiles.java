@@ -24,4 +24,6 @@ public class Profiles {
     private String phone;
     private String password;
 
+    public Profiles(String s) {
+    }
 }
