@@ -1,5 +1,6 @@
 package com.asp_dev.naissances.entities;
 
+import com.asp_dev.naissances.emuns.Civility;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,8 @@ public class Profiles {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Enumerated(EnumType.STRING)
+    private Civility civility;
     private String firstName;
     private String lastName;
     private String email;

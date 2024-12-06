@@ -1,4 +1,4 @@
-package com.asp_dev.naissances.exceptions;
+package com.asp_dev.naissances.shared.exceptions;
 
 import java.time.LocalDateTime;
 

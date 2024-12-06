@@ -1,13 +1,12 @@
 package com.asp_dev.naissances.services;
 
 import com.asp_dev.naissances.entities.Profiles;
-import com.asp_dev.naissances.exceptions.ProfilesNotFoundException;
+import com.asp_dev.naissances.shared.exceptions.ProfilesNotFoundException;
 import com.asp_dev.naissances.repository.ProfilesRepository;
+import com.asp_dev.naissances.shared.exceptions.services.ValidationsService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,9 +18,14 @@ import java.util.Optional;
 public class ProfilesService {
 
     private final ProfilesRepository profilesRepository;
+    private final ValidationsService validationsService;
 
     public void create(Profiles profiles) {
         log.info("l'email du nouveau profile {} ", profiles.getEmail());
+
+        this.validationsService.validateEmail(profiles.getEmail());
+        this.validationsService.validatePhoneNumber(profiles.getPhone());
+
         this.profilesRepository.save(profiles);
 
     }
@@ -40,7 +44,7 @@ public class ProfilesService {
     public Profiles searchOneProfile(int id) {
         Optional<Profiles> optionalProfiles = this.profilesRepository.findById(id);
         return optionalProfiles.orElseThrow(() -> new EntityNotFoundException(
-                "Aucune response ne correspond aux paramèttres fournis"));
+                "Aucune response ne correspond aux paramètres fournis"));
     }
 
 
