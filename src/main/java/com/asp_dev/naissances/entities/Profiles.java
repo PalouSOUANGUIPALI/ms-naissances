@@ -1,6 +1,7 @@
 package com.asp_dev.naissances.entities;
 
 import com.asp_dev.naissances.emuns.Civility;
+import com.asp_dev.naissances.shared.entities.Address;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class Profiles {
     private String phone;
     private String password;
 
-    public Profiles(String s) {
-    }
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
+    @JoinColumn(name = "address_id")
+    private Address address;
 }

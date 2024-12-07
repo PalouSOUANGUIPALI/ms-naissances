@@ -1,4 +1,4 @@
-package com.asp_dev.naissances.shared.exceptions.services;
+package com.asp_dev.naissances.shared.services;
 
 import org.springframework.stereotype.Component;
 
@@ -26,11 +26,6 @@ public class ValidationsService {
         if (phoneNumber == null) {
             throw new RuntimeException("Le numéro de téléphone est requis");
         }
-        /*if (!phoneNumber.matches("[0-9]{10}")) {
-            throw new RuntimeException("Format du numéro de téléphone invalide");
-        }
-
-         */
         if (!phoneNumber.matches("^\\+?[1-9]\\d{0,2}(\\s?[-]?\\(?\\d{1,5}\\)?\\s?[-]?\\d{1,5}){1,5}$") &&
                 !phoneNumber.matches("^[1-9]\\d{9,19}$")) {
             throw new RuntimeException("Format du numéro de téléphone invalide");

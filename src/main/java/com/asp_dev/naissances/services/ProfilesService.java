@@ -1,9 +1,11 @@
 package com.asp_dev.naissances.services;
 
 import com.asp_dev.naissances.entities.Profiles;
+import com.asp_dev.naissances.shared.entities.Address;
 import com.asp_dev.naissances.shared.exceptions.ProfilesNotFoundException;
 import com.asp_dev.naissances.repository.ProfilesRepository;
-import com.asp_dev.naissances.shared.exceptions.services.ValidationsService;
+import com.asp_dev.naissances.shared.services.AddressService;
+import com.asp_dev.naissances.shared.services.ValidationsService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +19,17 @@ import java.util.Optional;
 @Service
 public class ProfilesService {
 
+    private final AddressService addressService;
     private final ProfilesRepository profilesRepository;
     private final ValidationsService validationsService;
 
     public void create(Profiles profiles) {
         log.info("l'email du nouveau profile {} ", profiles.getEmail());
+
+        if (profiles.getAddress() != null) {
+            Address address = this.addressService.create(profiles.getAddress());
+            profiles.setAddress(address);
+        }
 
         this.validationsService.validateEmail(profiles.getEmail());
         this.validationsService.validatePhoneNumber(profiles.getPhone());
