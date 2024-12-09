@@ -29,6 +29,6 @@ public class Profiles {
     private String password;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
-    @JoinColumn(name = "address_id")
+    @JoinColumn(name = "addresses_id")
     private Address address;
 }

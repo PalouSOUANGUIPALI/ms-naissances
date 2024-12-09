@@ -3,9 +3,8 @@ spring:
     name: ms-naissances
   jpa:
     hibernate:
-      ddl-auto: update
-    #database-platform: org.hibernate.dialect.MySQLDialect
-
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.MySQLDialect
   server:
     servlet:
       context-path: /api
