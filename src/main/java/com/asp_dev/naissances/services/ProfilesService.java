@@ -23,7 +23,7 @@ public class ProfilesService {
     private final ProfilesRepository profilesRepository;
     private final ValidationsService validationsService;
 
-    public void create(Profiles profiles) {
+    public Profiles create(Profiles profiles) {
         log.info("l'email du nouveau profile {} ", profiles.getEmail());
 
         if (profiles.getAddress() != null) {
@@ -36,6 +36,7 @@ public class ProfilesService {
 
         this.profilesRepository.save(profiles);
 
+        return profiles;
     }
 
     public List<Profiles> search() {

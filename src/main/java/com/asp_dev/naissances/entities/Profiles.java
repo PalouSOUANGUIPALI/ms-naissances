@@ -3,14 +3,12 @@ package com.asp_dev.naissances.entities;
 import com.asp_dev.naissances.emuns.Civility;
 import com.asp_dev.naissances.shared.entities.Address;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
@@ -31,4 +29,5 @@ public class Profiles {
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
     @JoinColumn(name = "addresses_id")
     private Address address;
+
 }
