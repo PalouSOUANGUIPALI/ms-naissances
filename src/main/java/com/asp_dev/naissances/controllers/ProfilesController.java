@@ -57,7 +57,7 @@ public class ProfilesController {
 
     /*
        Update profile
-       @Params : profiles, id in the pathvariable
+       @Params : profiles, id in the path variable
        @Return : profile whose update
     */
     @PutMapping(path = "update-profile/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
