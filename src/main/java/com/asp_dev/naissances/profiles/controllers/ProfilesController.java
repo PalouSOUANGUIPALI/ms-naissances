@@ -1,7 +1,7 @@
-package com.asp_dev.naissances.controllers;
+package com.asp_dev.naissances.profiles.controllers;
 
-import com.asp_dev.naissances.entities.Profiles;
-import com.asp_dev.naissances.services.ProfilesService;
+import com.asp_dev.naissances.profiles.entities.Profiles;
+import com.asp_dev.naissances.profiles.services.ProfilesService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,20 +19,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ProfilesController {
 
     private final ProfilesService profilesService;
-
-
-    /*
-        Creation de profile
-        @Params : profiles
-        @Return : void
-     */
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(path = "create-profiles", consumes = APPLICATION_JSON_VALUE)
-    public void create(@RequestBody Profiles profiles) {
-        log.trace(String.valueOf(profiles.toString()));
-        this.profilesService.create(profiles);
-
-    }
 
      /*
        liste de profile

@@ -1,8 +1,10 @@
 package com.asp_dev.naissances.services;
 
 
-import com.asp_dev.naissances.entities.Profiles;
-import com.asp_dev.naissances.repository.ProfilesRepository;
+import com.asp_dev.naissances.authentification.AuthentificationService;
+import com.asp_dev.naissances.profiles.entities.Profiles;
+import com.asp_dev.naissances.profiles.repository.ProfilesRepository;
+import com.asp_dev.naissances.profiles.services.ProfilesService;
 import com.asp_dev.naissances.shared.entities.Address;
 import com.asp_dev.naissances.shared.services.AddressService;
 import com.asp_dev.naissances.shared.services.ValidationsService;
@@ -25,6 +27,9 @@ class ProfilesServiceTest {
 
     @Mock
     private ProfilesRepository profilesRepository;
+
+    @Mock
+    AuthentificationService authentificationService;
 
     @Mock
     private AddressService addressService;  // Mock du service d'adresse
@@ -89,18 +94,6 @@ class ProfilesServiceTest {
         profile.setLastName("Doe");
         profile.setPhone("12345");
 
-        // Initialisation des données pour la création d'un profile
-        address = new Address();
-        address.setStreet("123 Test St");
-        address.setCity("Test City");
-
-        profilesAndAddress = new Profiles();
-        profilesAndAddress.setId(1);
-        profilesAndAddress.setEmail("testprofileaddrress@example.com");
-        profilesAndAddress.setFirstName("John");
-        profilesAndAddress.setLastName("Doe");
-        profilesAndAddress.setPhone("123456789");
-        profilesAndAddress.setAddress(address);
     }
 
     // Test de réussite
@@ -213,77 +206,5 @@ class ProfilesServiceTest {
 
         // Vérifier que `delete` n'a pas été appelé
         verify(profilesRepository, never()).delete(any());
-    }
-
-
-    /*
-        Test de création d'un profile avec l'adresse jointe
-     */
-    // Test de réussite création d'un profile avec l'adresse jointe
-    @Test
-    public void testCreateProfile_WithAddress() {
-        // Arrange
-        Address createdAddress = new Address();
-        createdAddress.setStreet("123 Test St");
-        createdAddress.setCity("Test City");
-
-        // Simuler la création de l'adresse via le service
-        when(addressService.create(address)).thenReturn(createdAddress);
-
-        // Simuler les validations
-        doNothing().when(validationsService).validateEmail(profilesAndAddress.getEmail());
-        doNothing().when(validationsService).validatePhoneNumber(profilesAndAddress.getPhone());
-
-        // Simuler la sauvegarde du profil
-        when(profilesRepository.save(profilesAndAddress)).thenReturn(profilesAndAddress);
-
-        // Act
-        Profiles result = profilesService.create(profilesAndAddress);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals("testprofileaddrress@example.com", result.getEmail());
-        assertEquals("John", result.getFirstName());
-        assertEquals("Doe", result.getLastName());
-        assertEquals("123456789", result.getPhone());
-        assertNotNull(result.getAddress());  // L'adresse ne doit pas être nulle
-        assertEquals("123 Test St", result.getAddress().getStreet());  // Vérifier l'adresse
-
-        // Vérifier les appels des services
-        verify(addressService, times(1)).create(address);  // Vérifie que `create` de l'adresse a été appelé une fois
-        verify(validationsService, times(1)).validateEmail(profilesAndAddress.getEmail());  // Vérifie que la validation email a été appelée une fois
-        verify(validationsService, times(1)).validatePhoneNumber(profilesAndAddress.getPhone());  // Vérifie que la validation téléphone a été appelée une fois
-        verify(profilesRepository, times(1)).save(profilesAndAddress);  // Vérifie que le profil a été sauvegardé
-    }
-
-    // // Test d'échec création d'un profile avec l'adresse jointe
-    @Test
-    public void testCreateProfile_WithoutAddress() {
-        // Arrange
-        profilesAndAddress.setAddress(null);  // L'adresse est nulle
-
-        // Simuler les validations
-        doNothing().when(validationsService).validateEmail(profilesAndAddress.getEmail());
-        doNothing().when(validationsService).validatePhoneNumber(profilesAndAddress.getPhone());
-
-        // Simuler la sauvegarde du profil
-        when(profilesRepository.save(profilesAndAddress)).thenReturn(profilesAndAddress);
-
-        // Act
-        Profiles result = profilesService.create(profilesAndAddress);
-
-        // Assert
-        assertNotNull(result);
-        assertNull(result.getAddress());  // L'adresse doit être nulle
-        assertEquals("test@example.com", result.getEmail());
-        assertEquals("John", result.getFirstName());
-        assertEquals("Doe", result.getLastName());
-        assertEquals("123456789", result.getPhone());
-
-        // Vérifier les appels des services
-        verify(addressService, never()).create(any(Address.class));  // Le service d'adresse ne doit pas être appelé
-        verify(validationsService, times(1)).validateEmail(profilesAndAddress.getEmail());  // Vérifie que la validation email a été appelée une fois
-        verify(validationsService, times(1)).validatePhoneNumber(profilesAndAddress.getPhone());  // Vérifie que la validation téléphone a été appelée une fois
-        verify(profilesRepository, times(1)).save(profilesAndAddress);  // Vérifie que le profil a été sauvegardé
     }
 }

@@ -1,15 +1,16 @@
 package com.asp_dev.naissances.controllers;
 
-import com.asp_dev.naissances.entities.Profiles;
-import com.asp_dev.naissances.services.ProfilesService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.asp_dev.naissances.profiles.entities.Profiles;
+import com.asp_dev.naissances.profiles.controllers.ProfilesController;
+import com.asp_dev.naissances.profiles.services.ProfilesService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -22,11 +23,13 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
 public class ProfilesControllerTest {
 
     @Mock
     private ProfilesService profilesService;  // Mock du service
+
 
     @InjectMocks
     private ProfilesController profilesController;  // Le contrôleur à tester
@@ -36,12 +39,9 @@ public class ProfilesControllerTest {
     private Profiles profile;
 
 
-    private ObjectMapper objectMapper;
-
     @BeforeEach
     public void setUp() {
         // Initialisation du MockMvc
-        objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(profilesController).build();
 
         // Initialisation d'un profil pour les tests
@@ -55,29 +55,8 @@ public class ProfilesControllerTest {
     }
 
 
-
     @Test
-    public void testCreateProfile() throws Exception {
-        // Créer un objet Profiles fictif
-        Profiles profile = new Profiles();
-        profile.setFirstName("John Doe");
-        profile.setEmail("john.doe@example.com");
-
-        // Convertir l'objet en JSON
-        String profileJson = objectMapper.writeValueAsString(profile);
-
-        // Effectuer une requête POST
-        mockMvc.perform(post("/profiles/create-profiles")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(profileJson))
-                .andExpect(status().isCreated()); // Vérifier que le statut HTTP est 201 (Created)
-
-        // Vérifier que le service a été appelé avec le bon objet Profiles
-        verify(profilesService, times(1)).create(any(Profiles.class));
-    }
-
-
-    @Test
+    @DisplayName("Lire une liste de profile")
     public void testGetAllProfiles() throws Exception {
         // Arrange
         when(profilesService.search()).thenReturn(Collections.singletonList(profile));  // Simuler la réponse du service
@@ -95,6 +74,7 @@ public class ProfilesControllerTest {
 
 
     @Test
+    @DisplayName("Lire un profile")
     public void testGetOneProfile() throws Exception {
         // Arrange
         when(profilesService.searchOneProfile(1)).thenReturn(profile);  // Simuler la réponse du service
@@ -108,6 +88,7 @@ public class ProfilesControllerTest {
     }
 
     @Test
+    @DisplayName("Mettre à jour un profile")
     public void testUpdateProfile() throws Exception {
         // Arrange : Créer un profil existant pour le test
         Profiles existingProfile = new Profiles();
@@ -142,6 +123,7 @@ public class ProfilesControllerTest {
 
 
     @Test
+    @DisplayName("Supprimer un profile")
     public void testDeleteProfile() throws Exception {
         // Arrange
         doNothing().when(profilesService).deleteProfile(1);  // Simuler que le profil est supprimé

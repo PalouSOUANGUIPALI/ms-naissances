@@ -1,6 +1,6 @@
-package com.asp_dev.naissances.repository;
+package com.asp_dev.naissances.profiles.repository;
 
-import com.asp_dev.naissances.entities.Profiles;
+import com.asp_dev.naissances.profiles.entities.Profiles;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

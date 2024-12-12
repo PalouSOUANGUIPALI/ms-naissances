@@ -1,7 +1,8 @@
 package com.asp_dev.naissances.repository;
 
 
-import com.asp_dev.naissances.entities.Profiles;
+import com.asp_dev.naissances.profiles.entities.Profiles;
+import com.asp_dev.naissances.profiles.repository.ProfilesRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,9 +1,8 @@
-package com.asp_dev.naissances.services;
+package com.asp_dev.naissances.profiles.services;
 
-import com.asp_dev.naissances.entities.Profiles;
-import com.asp_dev.naissances.shared.entities.Address;
+import com.asp_dev.naissances.profiles.entities.Profiles;
 import com.asp_dev.naissances.shared.exceptions.ProfilesNotFoundException;
-import com.asp_dev.naissances.repository.ProfilesRepository;
+import com.asp_dev.naissances.profiles.repository.ProfilesRepository;
 import com.asp_dev.naissances.shared.services.AddressService;
 import com.asp_dev.naissances.shared.services.ValidationsService;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,21 +22,6 @@ public class ProfilesService {
     private final ProfilesRepository profilesRepository;
     private final ValidationsService validationsService;
 
-    public Profiles create(Profiles profiles) {
-        log.info("l'email du nouveau profile {} ", profiles.getEmail());
-
-        if (profiles.getAddress() != null) {
-            Address address = this.addressService.create(profiles.getAddress());
-            profiles.setAddress(address);
-        }
-
-        this.validationsService.validateEmail(profiles.getEmail());
-        this.validationsService.validatePhoneNumber(profiles.getPhone());
-
-        this.profilesRepository.save(profiles);
-
-        return profiles;
-    }
 
     public List<Profiles> search() {
         List<Profiles> profiles = (List<Profiles>) this.profilesRepository.findAll();
