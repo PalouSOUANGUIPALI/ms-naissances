@@ -1,5 +1,6 @@
 package com.asp_dev.naissances.authentification;
 
+import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
 import com.asp_dev.naissances.profiles.entities.Profiles;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +23,9 @@ public class AuthentificationController {
     */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "sign-up")
-    public void create(@RequestBody Profiles profiles) {
-        log.trace(String.valueOf(profiles.toString()));
-        this.authentificationService.create(profiles);
+    public void create(@RequestBody ProfilesDTO profilesDTO) {
+        log.trace(String.valueOf(profilesDTO.toString()));
+        this.authentificationService.create(profilesDTO);
 
     }
 }

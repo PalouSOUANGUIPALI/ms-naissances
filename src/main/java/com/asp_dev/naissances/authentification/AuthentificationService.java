@@ -1,10 +1,10 @@
 package com.asp_dev.naissances.authentification;
 
+import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
 import com.asp_dev.naissances.profiles.entities.Profiles;
+import com.asp_dev.naissances.profiles.mappingDtoToObject.ProfilesMapping;
 import com.asp_dev.naissances.profiles.repository.ProfilesRepository;
-import com.asp_dev.naissances.profiles.services.ProfilesService;
 import com.asp_dev.naissances.shared.entities.Address;
-import com.asp_dev.naissances.shared.repository.AddressRepository;
 import com.asp_dev.naissances.shared.services.AddressService;
 import com.asp_dev.naissances.shared.services.ValidationsService;
 import lombok.AllArgsConstructor;
@@ -20,14 +20,18 @@ public class AuthentificationService {
     private final ValidationsService validationsService;
     private final ProfilesRepository profilesRepository;
     private final AddressService addressService;
+    private final ProfilesMapping profilesMapping;
 
-    public Profiles create(Profiles profiles) {
-        log.info("l'email du nouveau profile {} ", profiles.getEmail());
+    public Profiles create(ProfilesDTO profilesDTO) {
+        log.info("l'email du nouveau profile {} ", profilesDTO.email());
+
+        Profiles profiles = this.profilesMapping.dtoToEntity(profilesDTO);
 
         if (profiles.getAddress() != null) {
             Address address = this.addressService.create(profiles.getAddress());
             profiles.setAddress(address);
         }
+
 
         String userPassword = profiles.getPassword();
         String hashedPassword = bCryptPasswordEncoder.encode(userPassword);
