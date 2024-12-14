@@ -2,7 +2,7 @@ package com.asp_dev.naissances.authentification;
 
 import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
 import com.asp_dev.naissances.profiles.entities.Profiles;
-import com.asp_dev.naissances.profiles.mappingDtoToObject.ProfilesMapping;
+import com.asp_dev.naissances.profiles.mappingDtoToObject.ProfilesMapper;
 import com.asp_dev.naissances.profiles.repository.ProfilesRepository;
 import com.asp_dev.naissances.shared.entities.Address;
 import com.asp_dev.naissances.shared.services.AddressService;
@@ -20,12 +20,12 @@ public class AuthentificationService {
     private final ValidationsService validationsService;
     private final ProfilesRepository profilesRepository;
     private final AddressService addressService;
-    private final ProfilesMapping profilesMapping;
+    private final ProfilesMapper profilesMapper;
 
     public Profiles create(ProfilesDTO profilesDTO) {
         log.info("l'email du nouveau profile {} ", profilesDTO.email());
 
-        Profiles profiles = this.profilesMapping.dtoToEntity(profilesDTO);
+        Profiles profiles = this.profilesMapper.dtoToEntity(profilesDTO);
 
         if (profiles.getAddress() != null) {
             Address address = this.addressService.create(profiles.getAddress());

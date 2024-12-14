@@ -1,10 +1,11 @@
 package com.asp_dev.naissances.profiles.services;
 
+import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
 import com.asp_dev.naissances.profiles.entities.Profiles;
+import com.asp_dev.naissances.profiles.mappingDtoToObject.ProfilesMapper;
 import com.asp_dev.naissances.shared.exceptions.ProfilesNotFoundException;
 import com.asp_dev.naissances.profiles.repository.ProfilesRepository;
 import com.asp_dev.naissances.shared.services.AddressService;
-import com.asp_dev.naissances.shared.services.ValidationsService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Slf4j
@@ -20,17 +23,19 @@ public class ProfilesService {
 
     private final AddressService addressService;
     private final ProfilesRepository profilesRepository;
-    private final ValidationsService validationsService;
+    private final ProfilesMapper profilesMapper;
 
 
-    public List<Profiles> search() {
+    public Set<ProfilesDTO> search() {
         List<Profiles> profiles = (List<Profiles>) this.profilesRepository.findAll();
+
 
         // Throw exception if no profiles are found
         if (profiles.isEmpty()) {
             throw new ProfilesNotFoundException("Aucun profile n'existe.");
         }
-        return profiles;
+        return profiles.stream().map(this.profilesMapper::entityToDto).collect(Collectors.toSet());
+
     }
 
 
@@ -49,8 +54,7 @@ public class ProfilesService {
             optionalProfilesInDataBase.get().setLastName(profiles.getLastName());
             optionalProfilesInDataBase.get().setPhone(profiles.getPhone());
         }
-        this.profilesRepository.save(optionalProfilesInDataBase.get());
-        return optionalProfilesInDataBase.orElse(null);
+        return this.profilesRepository.save(optionalProfilesInDataBase.get());
     }
 
     public void deleteProfile(int id) {

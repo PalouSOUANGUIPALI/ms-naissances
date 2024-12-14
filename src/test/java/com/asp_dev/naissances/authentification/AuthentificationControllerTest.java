@@ -65,6 +65,6 @@ class AuthentificationControllerTest {
                 .andExpect(status().isCreated()); // Vérifier que le statut HTTP est 201 (Created)
 
         // Vérifier que le service a été appelé avec le bon objet Profiles
-        verify(authentificationService, times(1)).create(any(Profiles.class));
+        verify(authentificationService, times(1)).create(any(com.asp_dev.naissances.profiles.dto.ProfilesDTO.class));
     }
 }

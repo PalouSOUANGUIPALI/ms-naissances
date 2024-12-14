@@ -1,5 +1,7 @@
 package com.asp_dev.naissances.controllers;
 
+import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
+import com.asp_dev.naissances.profiles.emuns.Civility;
 import com.asp_dev.naissances.profiles.entities.Profiles;
 import com.asp_dev.naissances.profiles.controllers.ProfilesController;
 import com.asp_dev.naissances.profiles.services.ProfilesService;
@@ -11,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -18,6 +21,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -39,12 +44,15 @@ public class ProfilesControllerTest {
     private Profiles profile;
 
 
+    private Set<ProfilesDTO> mockProfiles;
+
+
     @BeforeEach
     public void setUp() {
         // Initialisation du MockMvc
         mockMvc = MockMvcBuilders.standaloneSetup(profilesController).build();
 
-        // Initialisation d'un profil pour les tests
+        // Initialisation d'un profil pour les tests update, delete, getOne-profile
         profile = new Profiles();
         profile.setId(1);
         profile.setEmail("test@example.com");
@@ -52,25 +60,63 @@ public class ProfilesControllerTest {
         profile.setLastName("Doe");
         profile.setPhone("123456789");
 
+
+
+        // Initialisation des profils fictifs pour le test testGetAllProfiles
+        mockProfiles = new HashSet<>();
+
+        ProfilesDTO profile1 = new ProfilesDTO(
+                Civility.MR,
+                "John",
+                "Doe",
+                "john.doe@example.com",
+                "1234567890",
+                "password123"
+        );
+        ProfilesDTO profile2 = new ProfilesDTO(
+                Civility.MR,
+                "Jane",
+                "Doe",
+                "jane.doe@example.com",
+                "0987654321",
+                "password456"
+        );
+        mockProfiles.add(profile1);
+        mockProfiles.add(profile2);
+
+        // Simuler la méthode search() du service
+        when(profilesService.search()).thenReturn(mockProfiles);
+
     }
 
 
     @Test
     @DisplayName("Lire une liste de profile")
     public void testGetAllProfiles() throws Exception {
-        // Arrange
-        when(profilesService.search()).thenReturn(Collections.singletonList(profile));  // Simuler la réponse du service
+        // Effectuer une requête GET et vérifier la réponse
+        mockMvc.perform(get("/get-all-profiles")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())  // Vérifier le code de statut HTTP 200
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))  // Vérifier le type de contenu
+                .andExpect(jsonPath("$[0].civility").value(Civility.MR.name()))  // Vérifier la civilité du premier profil
+                .andExpect(jsonPath("$[1].civility").value(Civility.MR.name()))  // Vérifier la civilité du deuxième profil
+                .andExpect(jsonPath("$[0].firstName").value("John"))  // Vérifier le prénom du premier profil
+                .andExpect(jsonPath("$[1].firstName").value("Jane"))  // Vérifier le prénom du deuxième profil
+                .andExpect(jsonPath("$[0].lastName").value("Doe"))  // Vérifier le nom du premier profil
+                .andExpect(jsonPath("$[1].lastName").value("Doe"))  // Vérifier le nom du deuxième profil
+                .andExpect(jsonPath("$[0].email").value("john.doe@example.com"))  // Vérifier l'email du premier profil
+                .andExpect(jsonPath("$[1].email").value("jane.doe@example.com"))  // Vérifier l'email du deuxième profil
+                .andExpect(jsonPath("$[0].phone").value("1234567890"))  // Vérifier le téléphone du premier profil
+                .andExpect(jsonPath("$[1].phone").value("0987654321"))  // Vérifier le téléphone du deuxième profil
+                .andExpect(jsonPath("$[0].password").value("password123"))  // Vérifier le mot de passe du premier profil
+                .andExpect(jsonPath("$[1].password").value("password456"));  // Vérifier le mot de passe du deuxième profil
 
-        // Act & Assert
-        ResultActions resultActions = mockMvc.perform(get("/profiles/get-all-profiles"))
-                .andExpect(status().isOk())  // Vérifie que le code de statut HTTP est 200 (OK)
-                .andExpect(jsonPath("$[0].email").value("test@example.com"));  // Vérifie que l'email du premier profil est correct
-
-        // Afficher la réponse dans la console
-        resultActions.andDo(MockMvcResultHandlers.print());  // Cette ligne va afficher la réponse complète dans la console
-
-        verify(profilesService, times(1)).search();  // Vérifie que `search` a été appelé une fois
+        // Vérifier que la méthode search() a été appelée une seule fois
+        verify(profilesService, times(1)).search();
     }
+
+
+
 
 
     @Test

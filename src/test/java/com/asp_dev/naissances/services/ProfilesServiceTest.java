@@ -2,6 +2,7 @@ package com.asp_dev.naissances.services;
 
 
 import com.asp_dev.naissances.authentification.AuthentificationService;
+import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
 import com.asp_dev.naissances.profiles.entities.Profiles;
 import com.asp_dev.naissances.profiles.repository.ProfilesRepository;
 import com.asp_dev.naissances.profiles.services.ProfilesService;
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
 class ProfilesServiceTest {
@@ -61,7 +63,7 @@ class ProfilesServiceTest {
                                         .build()));
 
         //Act
-        List<Profiles> profiles = this.profilesService.search();
+        Set<ProfilesDTO> profiles = this.profilesService.search();
 
 
         //Assert

@@ -1,7 +1,6 @@
 package com.asp_dev.naissances.authentification;
 
 import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
-import com.asp_dev.naissances.profiles.entities.Profiles;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

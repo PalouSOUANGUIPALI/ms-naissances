@@ -1,13 +1,18 @@
 package com.asp_dev.naissances.profiles.controllers;
 
+import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
 import com.asp_dev.naissances.profiles.entities.Profiles;
 import com.asp_dev.naissances.profiles.services.ProfilesService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import java.util.Set;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -27,7 +32,7 @@ public class ProfilesController {
      */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "get-all-profiles", produces = APPLICATION_JSON_VALUE)
-    public List<Profiles> search() {
+    public Set<ProfilesDTO> search(@PathVariable("version") String version) {
         return this.profilesService.search();
     }
 

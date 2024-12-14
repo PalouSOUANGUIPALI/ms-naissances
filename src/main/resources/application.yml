@@ -5,6 +5,11 @@ spring:
     hibernate:
       ddl-auto: validate
     database-platform: org.hibernate.dialect.MySQLDialect
-  server:
-    servlet:
-      context-path: /api
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      INDENT_OUTPUT: true
+server:
+  servlet:
+    context-path: /api
+

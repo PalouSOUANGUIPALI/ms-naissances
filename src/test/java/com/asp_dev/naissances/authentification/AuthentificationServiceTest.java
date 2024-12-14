@@ -1,25 +1,26 @@
 package com.asp_dev.naissances.authentification;
 
+import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
 import com.asp_dev.naissances.profiles.entities.Profiles;
-import com.asp_dev.naissances.shared.entities.Address;
+import com.asp_dev.naissances.profiles.mappingDtoToObject.ProfilesMapper;
 import com.asp_dev.naissances.profiles.repository.ProfilesRepository;
-import com.asp_dev.naissances.shared.services.AddressService;
 import com.asp_dev.naissances.shared.services.ValidationsService;
+import com.asp_dev.naissances.profiles.emuns.Civility;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class AuthentificationServiceTest {
+class AuthentificationServiceTest {
+
+    @InjectMocks
+    private AuthentificationService authentificationService;
 
     @Mock
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -31,73 +32,105 @@ public class AuthentificationServiceTest {
     private ProfilesRepository profilesRepository;
 
     @Mock
-    private AddressService addressService;
+    private ProfilesMapper profilesMapper;
 
-    @InjectMocks
-    private AuthentificationService authentificationService;
-
-    private Profiles profile;
-    private Address address;
+    private ProfilesDTO profilesDTO;
+    private Profiles profiles;
 
     @BeforeEach
-    public void setUp() {
-        // Initialisation des objets
-        address = new Address();  // Crée un objet Address fictif pour le test
-        address.setStreet("123 Main St");
-        address.setCity("Paris");
-        address.setZip("75001");
-        address.setCountry("France");
+    void setUp() {
+        // Initialisation des mocks avant chaque test
+        MockitoAnnotations.openMocks(this);
 
-        profile = new Profiles();  // Crée un objet Profiles fictif pour le test
-        profile.setFirstName("John");
-        profile.setLastName("Doe");
-        profile.setEmail("john.doe@example.com");
-        profile.setPhone("123-456-7890");
-        profile.setPassword("password123");  // Mot de passe non haché
-        profile.setAddress(address);  // Ajouter une adresse pour tester le cas où une adresse est présente
+        // Initialisation d'un ProfilesDTO avec les propriétés nécessaires pour le test
+        profilesDTO = new ProfilesDTO(
+                Civility.MR, // Exemple de civilité
+                "John",      // Prénom
+                "Doe",       // Nom de famille
+                "john.doe@example.com", // Email
+                "0123456789", // Numéro de téléphone
+                "securePassword" // Mot de passe
+        );
+
+        // Utilisation du Builder pour créer l'objet Profiles sans l'adresse
+        profiles = Profiles.builder()
+                .civility(Civility.MR) // Civilité
+                .firstName("John")     // Prénom
+                .lastName("Doe")       // Nom de famille
+                .email("john.doe@example.com") // Email
+                .phone("0123456789")   // Téléphone
+                .password("securePassword") // Mot de passe
+                .build(); // Pas d'adresse dans ce test
+
+        // Simulation des comportements des mocks
+        when(profilesMapper.dtoToEntity(profilesDTO)).thenReturn(profiles);
+        when(bCryptPasswordEncoder.encode(profilesDTO.password())).thenReturn("hashedPassword");
     }
 
     @Test
-    @DisplayName("Test de réussite de Création de profile")
-    public void testCreateProfile_WithAddress() {
-        // Configuration du mock pour l'encodeur de mot de passe
-        when(bCryptPasswordEncoder.encode(profile.getPassword())).thenReturn("password123");
+    void testCreate_withValidProfilesDTO_shouldSaveProfile() {
+        // Appel de la méthode à tester
+        Profiles result = authentificationService.create(profilesDTO);
 
-        // Simuler la création de l'adresse via le service
-        when(addressService.create(any(Address.class))).thenReturn(address);
+        // Capture de l'argument passé à la méthode profilesRepository.save
+        ArgumentCaptor<Profiles> profilesCaptor = ArgumentCaptor.forClass(Profiles.class);
+        verify(profilesRepository).save(profilesCaptor.capture());
 
-        // Exécution de la méthode à tester
-        Profiles result = authentificationService.create(profile);
+        Profiles savedProfile = profilesCaptor.getValue();
 
-        // Vérification des interactions et de l'état
-        verify(bCryptPasswordEncoder).encode(profile.getPassword());
-        verify(validationsService).validateEmail(profile.getEmail());
-        verify(validationsService).validatePhoneNumber(profile.getPhone());
-        verify(profilesRepository).save(result);
+        // Vérifications des valeurs enregistrées
+        assertNotNull(savedProfile); // Vérifier que le profil n'est pas null
+        assertEquals(Civility.MR, savedProfile.getCivility()); // Vérifier que la civilité est correcte
+        assertEquals("John", savedProfile.getFirstName()); // Vérifier le prénom
+        assertEquals("Doe", savedProfile.getLastName()); // Vérifier le nom de famille
+        assertEquals("john.doe@example.com", savedProfile.getEmail()); // Vérifier l'email
+        assertEquals("hashedPassword", savedProfile.getPassword()); // Vérifier que le mot de passe est bien haché
 
-        // Assertions
-        assertNotNull(result);
-        assertEquals("password123", result.getPassword());
+        // Vérification des appels aux services de validation
+        verify(validationsService).validateEmail(profilesDTO.email()); // Vérifier que l'email a été validé
+        verify(validationsService).validatePhoneNumber(profilesDTO.phone()); // Vérifier que le téléphone a été validé
     }
 
     @Test
-    @DisplayName("Test d'échec de Création de profile")
-    public void testCreateProfile_WithoutAddress() {
-        // Configuration du mock pour l'encodeur de mot de passe
-        profile.setAddress(null);
-        when(bCryptPasswordEncoder.encode(profile.getPassword())).thenReturn("password123");
+    void testCreate_withNullAddress_shouldSaveProfileWithoutAddress() {
+        // Ce test vérifie que l'adresse est absente dans l'objet créé, car l'adresse ne fait pas partie du DTO
 
-        // Exécution de la méthode à tester
-        Profiles result = authentificationService.create(profile);
+        // Création d'un ProfilesDTO sans adresse
+        ProfilesDTO profilesDTOWithoutAddress = new ProfilesDTO(
+                Civility.MR, // Civilité
+                "Jane",      // Prénom
+                "Doe",       // Nom de famille
+                "jane.doe@example.com", // Email
+                "0123456789", // Numéro de téléphone
+                "securePassword" // Mot de passe
+        );
 
-        // Vérification des interactions et de l'état
-        verify(bCryptPasswordEncoder).encode(profile.getPassword());
-        verify(validationsService).validateEmail(profile.getEmail());
-        verify(validationsService).validatePhoneNumber(profile.getPhone());
-        verify(profilesRepository).save(result);
+        // Création d'un profil sans adresse
+        Profiles profilesWithoutAddress = Profiles.builder()
+                .civility(Civility.MR) // Civilité
+                .firstName("Jane")     // Prénom
+                .lastName("Doe")       // Nom de famille
+                .email("jane.doe@example.com") // Email
+                .phone("0123456789")   // Téléphone
+                .password("securePassword") // Mot de passe
+                .build(); // Pas d'adresse ici
 
-        // Assertions
-        assertNotNull(result);
-        assertEquals("password123", result.getPassword());
+        // Simulation du comportement de profilesMapper pour le nouveau DTO
+        when(profilesMapper.dtoToEntity(profilesDTOWithoutAddress)).thenReturn(profilesWithoutAddress);
+
+        // Appel de la méthode à tester
+        Profiles result = authentificationService.create(profilesDTOWithoutAddress);
+
+        // Capture de l'argument passé à la méthode profilesRepository.save
+        ArgumentCaptor<Profiles> profilesCaptor = ArgumentCaptor.forClass(Profiles.class);
+        verify(profilesRepository).save(profilesCaptor.capture());
+
+        Profiles savedProfile = profilesCaptor.getValue();
+
+        // Vérifications des valeurs enregistrées
+        assertNotNull(savedProfile); // Vérifier que le profil n'est pas null
+        assertNull(savedProfile.getAddress());  // Vérifier que l'adresse est bien absente
+        verify(validationsService).validateEmail(profilesDTOWithoutAddress.email()); // Vérifier la validation de l'email
+        verify(validationsService).validatePhoneNumber(profilesDTOWithoutAddress.phone()); // Vérifier la validation du téléphone
     }
 }

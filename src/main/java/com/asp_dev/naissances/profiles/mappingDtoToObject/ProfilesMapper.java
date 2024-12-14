@@ -5,7 +5,7 @@ import com.asp_dev.naissances.profiles.entities.Profiles;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProfilesMapping {
+public class ProfilesMapper {
 
     public Profiles dtoToEntity(ProfilesDTO dto) {
         Profiles entity = new Profiles();
@@ -15,7 +15,18 @@ public class ProfilesMapping {
         entity.setPassword(dto.password());
         entity.setPhone(dto.phone());
         entity.setCivility(dto.civility());
-        entity.setAddress(dto.address());
+        //entity.setAddress(dto.address());
         return entity;
+    }
+
+    public ProfilesDTO entityToDto(Profiles entity) {
+        return new ProfilesDTO(
+                entity.getCivility(),
+                entity.getFirstName(),
+                entity.getLastName(),
+                entity.getEmail(),
+                entity.getPhone(),
+                null
+        );
     }
 }
