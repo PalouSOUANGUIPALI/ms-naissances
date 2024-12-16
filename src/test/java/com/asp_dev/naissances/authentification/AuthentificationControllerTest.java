@@ -20,16 +20,16 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc(addFilters = false) // Permet de désactiver la sécurité spring security
 @ExtendWith(MockitoExtension.class)
 class AuthentificationControllerTest {
 
     private MockMvc mockMvc;  // Permet de simuler des appels HTTP
 
-    @InjectMocks
+    @InjectMocks  // Injection de la classe controller testée
     private AuthentificationController authentificationController;
 
-    @Mock
+    @Mock  // Injection du mock du service
     AuthentificationService authentificationService;
 
 
@@ -40,12 +40,14 @@ class AuthentificationControllerTest {
     @BeforeEach
     void setUp() {
         // Initialisation du MockMvc
-        objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(authentificationController).build();
+
+        // Initialisation du mock mapper de json en objet et inversement
+        objectMapper = new ObjectMapper();
     }
 
     @Test
-    @DisplayName("Création de profile")
+    @DisplayName("Création de profile") // donner un nom personnalisé à la méthode de test
     public void testCreateProfile() throws Exception {
         // Arrange
         // Créer un objet Profiles fictif
@@ -62,9 +64,9 @@ class AuthentificationControllerTest {
         mockMvc.perform(post("/auth/sign-up")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(profileJson))
-                .andExpect(status().isCreated()); // Vérifier que le statut HTTP est 201 (Created)
+                .andExpect(status().isCreated()); // Vérifier que le statut de la réponse HTTP est 201 (Created)
 
-        // Vérifier que le service a été appelé avec le bon objet Profiles
+        // Vérifier que le service a été appelé une fois avec le bon objet Profiles
         verify(authentificationService, times(1)).create(any(com.asp_dev.naissances.profiles.dto.ProfilesDTO.class));
     }
 }

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 class AuthentificationServiceTest {
 
-    @InjectMocks
+    @InjectMocks // Injection de la classe de test
     private AuthentificationService authentificationService;
 
     @Mock
@@ -69,22 +69,27 @@ class AuthentificationServiceTest {
 
     @Test
     void testCreate_withValidProfilesDTO_shouldSaveProfile() {
+        // Arrange
         // Appel de la méthode à tester
         Profiles result = authentificationService.create(profilesDTO);
 
+
+        // Act
         // Capture de l'argument passé à la méthode profilesRepository.save
         ArgumentCaptor<Profiles> profilesCaptor = ArgumentCaptor.forClass(Profiles.class);
         verify(profilesRepository).save(profilesCaptor.capture());
 
         Profiles savedProfile = profilesCaptor.getValue();
 
+
+        // Assert
         // Vérifications des valeurs enregistrées
         assertNotNull(savedProfile); // Vérifier que le profil n'est pas null
         assertEquals(Civility.MR, savedProfile.getCivility()); // Vérifier que la civilité est correcte
         assertEquals("John", savedProfile.getFirstName()); // Vérifier le prénom
         assertEquals("Doe", savedProfile.getLastName()); // Vérifier le nom de famille
         assertEquals("john.doe@example.com", savedProfile.getEmail()); // Vérifier l'email
-        assertEquals("hashedPassword", savedProfile.getPassword()); // Vérifier que le mot de passe est bien haché
+        assertEquals(savedProfile.getPassword(), "hashedPassword"); // Vérifier que le mot de passe est bien haché
 
         // Vérification des appels aux services de validation
         verify(validationsService).validateEmail(profilesDTO.email()); // Vérifier que l'email a été validé
@@ -93,8 +98,9 @@ class AuthentificationServiceTest {
 
     @Test
     void testCreate_withNullAddress_shouldSaveProfileWithoutAddress() {
-        // Ce test vérifie que l'adresse est absente dans l'objet créé, car l'adresse ne fait pas partie du DTO
+        // Ce test vérifie que l'objet adresse est absent dans l'objet créé, car l'adresse ne fait pas partie du DTO
 
+        // Arrange
         // Création d'un ProfilesDTO sans adresse
         ProfilesDTO profilesDTOWithoutAddress = new ProfilesDTO(
                 Civility.MR, // Civilité
@@ -115,6 +121,7 @@ class AuthentificationServiceTest {
                 .password("securePassword") // Mot de passe
                 .build(); // Pas d'adresse ici
 
+        // Act
         // Simulation du comportement de profilesMapper pour le nouveau DTO
         when(profilesMapper.dtoToEntity(profilesDTOWithoutAddress)).thenReturn(profilesWithoutAddress);
 
@@ -127,6 +134,7 @@ class AuthentificationServiceTest {
 
         Profiles savedProfile = profilesCaptor.getValue();
 
+        // Assert
         // Vérifications des valeurs enregistrées
         assertNotNull(savedProfile); // Vérifier que le profil n'est pas null
         assertNull(savedProfile.getAddress());  // Vérifier que l'adresse est bien absente
