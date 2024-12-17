@@ -32,7 +32,7 @@ public class ProfilesController {
      */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "get-all-profiles", produces = APPLICATION_JSON_VALUE)
-    public Set<ProfilesDTO> search(@PathVariable("version") String version) {
+    public Set<ProfilesDTO> search() {
         return this.profilesService.search();
     }
 
