@@ -6,6 +6,8 @@ import com.asp_dev.naissances.profiles.entities.Roles;
 import com.asp_dev.naissances.profiles.mappingDtoToObject.ProfilesMapper;
 import com.asp_dev.naissances.profiles.repository.ProfilesRepository;
 import com.asp_dev.naissances.profiles.repository.RolesRepository;
+import com.asp_dev.naissances.profiles.services.ActivationsService;
+import com.asp_dev.naissances.security.activations.Activation;
 import com.asp_dev.naissances.shared.entities.Address;
 import com.asp_dev.naissances.shared.services.AddressService;
 import com.asp_dev.naissances.shared.services.ValidationsService;
@@ -13,6 +15,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+
 @Slf4j
 @AllArgsConstructor
 @Service
@@ -24,6 +28,7 @@ public class AuthentificationService {
     private final AddressService addressService;
     private final ProfilesMapper profilesMapper;
     private final RolesRepository rolesRepository;
+    private final ActivationsService activationsService;
 
     public Profiles create(ProfilesDTO profilesDTO) {
         log.info("l'email du nouveau profile {} ", profilesDTO.email());
@@ -57,7 +62,11 @@ public class AuthentificationService {
         this.validationsService.validatePhoneNumber(profiles.getPhone());
 
         // enregistrer le profile ou l'utilisateur dans la base de données
-        this.profilesRepository.save(profiles);
+        profiles = this.profilesRepository.save(profiles);
+
+        // Envoyer le profile pour activation du code
+        Activation activation =  this.activationsService.createProfileCode(profiles);
+        log.info("le code d'activation du nouveau profile {} est {} ",profiles.getEmail(), activation.getUserCodeNotToPersist());
 
         // Retourner le profile enregistré dans la base de donnés
         return profiles;
