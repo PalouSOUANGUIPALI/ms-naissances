@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 
 @Slf4j
 @AllArgsConstructor
@@ -30,6 +32,8 @@ public class AuthentificationService {
     private final RolesRepository rolesRepository;
     private final ActivationsService activationsService;
 
+
+    // Méthode de création de profile
     public Profiles create(ProfilesDTO profilesDTO) {
         log.info("l'email du nouveau profile {} ", profilesDTO.email());
 
@@ -72,4 +76,10 @@ public class AuthentificationService {
         return profiles;
     }
 
+    // Méthode d'activation du profile
+    public void activateAccount(Map<String, String> activationCode) {
+        Profiles profiles = this.activationsService.validateAccountCodeAndReturnProfile(activationCode);
+        profiles.setActive(true);
+        this.profilesRepository.save(profiles);
+    }
 }

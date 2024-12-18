@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
@@ -25,6 +27,19 @@ public class AuthentificationController {
     public void create(@RequestBody ProfilesDTO profilesDTO) {
         log.trace(String.valueOf(profilesDTO.toString()));
         this.authentificationService.create(profilesDTO);
+
+    }
+
+    /*
+     Activation du profile avec le code à six chiffres
+     @Params : Map<String, String>
+     @Return : void
+  */
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PostMapping(path = "activate-account")
+    public void activate(@RequestBody Map<String, String> activationCode) {
+        log.trace("le code d'activation du nouveau profile {} ", activationCode.get("code"));
+        this.authentificationService.activateAccount(activationCode);
 
     }
 }
