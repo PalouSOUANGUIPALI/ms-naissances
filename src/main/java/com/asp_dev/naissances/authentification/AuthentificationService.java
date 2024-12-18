@@ -49,7 +49,7 @@ public class AuthentificationService {
         profiles.setPassword(hashedPassword);
 
         // Chercher les roles enregistrés dans la base de données en amont
-        // Ici, le role "PUBLIC" étant considérés comme role par défaut
+        // Ici, le role "PUBLIC" étant considéré comme role par défaut
         Roles roles = this.rolesRepository.findByName("PUBLIC");
 
         // Ajouter le role au profil
@@ -64,9 +64,9 @@ public class AuthentificationService {
         // enregistrer le profile ou l'utilisateur dans la base de données
         profiles = this.profilesRepository.save(profiles);
 
-        // Envoyer le profile pour activation du code
+        // Envoyer le profile pour activation avec le code d'activation à 6 chiffres
         Activation activation =  this.activationsService.createProfileCode(profiles);
-        log.info("le code d'activation du nouveau profile {} est {} ",profiles.getEmail(), activation.getUserCodeNotToPersist());
+        log.info("le code d'activation du nouveau profile {} est {} ", profiles.getEmail(), activation.getUserCodeNotToPersist());
 
         // Retourner le profile enregistré dans la base de donnés
         return profiles;
