@@ -91,7 +91,7 @@ public class ProfilesControllerTest {
     @DisplayName("Lire une liste de profile")
     public void testGetAllProfiles() throws Exception {
         // Effectuer une requête GET et vérifier la réponse
-        mockMvc.perform(get("/get-all-profiles")
+        mockMvc.perform(get("/api/profiles/get-all-profiles")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())  // Vérifier le code de statut HTTP 200
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))  // Vérifier le type de contenu

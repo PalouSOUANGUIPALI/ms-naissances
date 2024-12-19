@@ -1,5 +1,6 @@
 package com.asp_dev.naissances.authentification;
 
+import com.asp_dev.naissances.notifications.EmailServices;
 import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
 import com.asp_dev.naissances.profiles.entities.Profiles;
 import com.asp_dev.naissances.profiles.entities.Roles;
@@ -13,6 +14,8 @@ import com.asp_dev.naissances.shared.services.AddressService;
 import com.asp_dev.naissances.shared.services.ValidationsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.JpaContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,9 @@ public class AuthentificationService {
     private final ProfilesMapper profilesMapper;
     private final RolesRepository rolesRepository;
     private final ActivationsService activationsService;
+    private final EmailServices emailServices;
+    private final PersistenceExceptionTranslationPostProcessor persistenceExceptionTranslationPostProcessor;
+    private final JpaContext jpaContext;
 
 
     // Méthode de création de profile
@@ -71,6 +77,16 @@ public class AuthentificationService {
         // Envoyer le profile pour activation avec le code d'activation à 6 chiffres
         Activation activation =  this.activationsService.createProfileCode(profiles);
         log.info("le code d'activation du nouveau profile {} est {} ", profiles.getEmail(), activation.getUserCodeNotToPersist());
+
+        // Envoyer le code par email
+        this.emailServices.sendEmail(
+                Map.of(
+                        "email", profiles.getEmail(),
+                        "name", String.format("%s %s", profiles.getFirstName(), profiles.getLastName()),
+                        "code", "" + activation.getUserCodeNotToPersist(),
+                        "template", "activation-code.ftl"
+                )
+        );
 
         // Retourner le profile enregistré dans la base de donnés
         return profiles;
