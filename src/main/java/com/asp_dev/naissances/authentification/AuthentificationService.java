@@ -1,6 +1,7 @@
 package com.asp_dev.naissances.authentification;
 
 import com.asp_dev.naissances.notifications.EmailServices;
+import com.asp_dev.naissances.notifications.Mailpitclient;
 import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
 import com.asp_dev.naissances.profiles.entities.Profiles;
 import com.asp_dev.naissances.profiles.entities.Roles;
@@ -14,8 +15,6 @@ import com.asp_dev.naissances.shared.services.AddressService;
 import com.asp_dev.naissances.shared.services.ValidationsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.data.jpa.repository.JpaContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +34,6 @@ public class AuthentificationService {
     private final RolesRepository rolesRepository;
     private final ActivationsService activationsService;
     private final EmailServices emailServices;
-    private final PersistenceExceptionTranslationPostProcessor persistenceExceptionTranslationPostProcessor;
-    private final JpaContext jpaContext;
 
 
     // Méthode de création de profile

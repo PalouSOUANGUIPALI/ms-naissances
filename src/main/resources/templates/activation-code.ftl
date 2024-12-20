@@ -8,4 +8,4 @@ Pour l'activer, veuillez utiliser le code ci-dessous :
 <br><br/>
 Palou
 <br><br/>
-<a href="https://www.mesnaissance.com">mesnaissance.com</a>
+<a href="https://www.mesnaissances.com">mesnaissances.com</a>

@@ -10,14 +10,38 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import java.util.List;
 import java.util.Map;
+
+
 @Slf4j
 @Component
 public class EmailServices {
 
+    private final Mailpitclient mailpitclient;
+
+
+    String senderEmail = "no-reply@asp.dev.mesnaissances.com";
+    String senderName = "Asp.dev de mesnaissances.com";
+
+
+    public EmailServices(Mailpitclient mailpitclient) {
+        this.mailpitclient = mailpitclient;
+    }
+
     public void sendEmail(Map<String, String> parameters) {
-        String Message = this.buildEmail(parameters);
-        log.info("Le message est {}", Message);
+        String message = this.buildEmail(parameters);
+        log.info("Le message est {}", message);
+
+        Map<String, Object> emailParameters = Map.of(
+                "Subject", "Votre code d'activation",
+                "HTML", message,
+                "text", message,
+                "From", Map.of("Email", senderEmail, "Name", senderName),
+                "To", List.of(Map.of("Email", parameters.get("email"), "Name", parameters.get("name")))
+        );
+        this.mailpitclient.send(emailParameters);
+
     }
     private String buildEmail(Map<String, String> parameters) {
         Configuration configuration = new Configuration();
