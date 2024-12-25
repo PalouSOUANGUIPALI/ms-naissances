@@ -10,8 +10,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 
 @EnableConfigurationProperties(RsaKeys.class)
-@SpringBootApplication(exclude = {ManagementWebSecurityAutoConfiguration.class,
-		SecurityAutoConfiguration.class})
+@SpringBootApplication
 public class MsNaissancesApplication implements CommandLineRunner {
 
 

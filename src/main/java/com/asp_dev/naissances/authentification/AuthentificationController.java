@@ -4,6 +4,9 @@ import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -15,7 +18,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(path = "auth", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 public class AuthentificationController {
+
     private final AuthentificationService authentificationService;
+    private final AuthenticationManager authenticationManager;
 
     /*
        Creation de profile
@@ -36,7 +41,13 @@ public class AuthentificationController {
       @Return : void
    */
     @PostMapping(path = "sign-in")
-    public void login(@RequestBody Map<String, String> loginProfile) {
+    public void login(@RequestBody Map<String, String> connectionParameters) {
+        Authentication authentification = this.authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        connectionParameters.get("email"),
+                        connectionParameters.get("password"))
+                );
+        log.info("Utilisateur connecté est : {}", authentification.getName());
     }
 
     /*

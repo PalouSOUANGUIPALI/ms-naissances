@@ -7,7 +7,6 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,7 +23,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.multipart.support.AbstractMultipartHttpServletRequest;
 
 import static org.springframework.http.HttpMethod.POST;
 
@@ -91,8 +89,8 @@ public class ApplicationSecurity {
     @Bean
     JwtEncoder jwtEncoder(){
         final JWK jwk = new RSAKey
-                .Builder(this.rsaKeys.rsaPublicKey())
-                .privateKey(this.rsaKeys.rsaPrivateKey())
+                .Builder(this.rsaKeys.PublicKey())
+                .privateKey(this.rsaKeys.PrivateKey())
                 .build();
 
         JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(new JWKSet(jwk));
@@ -103,7 +101,7 @@ public class ApplicationSecurity {
     @Bean
     JwtDecoder jwtDecoder(){
         return NimbusJwtDecoder
-                .withPublicKey(this.rsaKeys.rsaPublicKey())
+                .withPublicKey(this.rsaKeys.PublicKey())
                 .build();
     }
 }
