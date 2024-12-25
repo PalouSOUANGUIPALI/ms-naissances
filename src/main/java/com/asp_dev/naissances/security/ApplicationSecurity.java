@@ -7,18 +7,26 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.multipart.support.AbstractMultipartHttpServletRequest;
+
+import static org.springframework.http.HttpMethod.POST;
 
 
 @EnableWebSecurity
@@ -39,6 +47,31 @@ public class ApplicationSecurity {
 
 
     @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return
+                httpSecurity
+                        .cors(Customizer.withDefaults())
+                        .headers(AbstractHttpConfigurer::disable)
+                        .csrf(AbstractHttpConfigurer::disable)
+                        .authorizeHttpRequests(
+                                customizer ->
+                                        customizer
+                                                .requestMatchers(POST, "/auth/sign-in").permitAll()
+                                                .requestMatchers(POST, "/auth/sign-up").permitAll()
+                                                .requestMatchers(POST, "/auth/activate-account").permitAll()
+                                                .anyRequest().authenticated()
+                        ).sessionManagement(httpSecuritySessionManagementConfigurer ->
+                                httpSecuritySessionManagementConfigurer
+                                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        
+                        .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer ->
+                                httpSecurityOAuth2ResourceServerConfigurer.jwt(Customizer.withDefaults()))
+                        .build();
+    }
+
+
+
+    @Bean
     DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(this.bCryptPasswordEncoder);
@@ -53,7 +86,6 @@ public class ApplicationSecurity {
         authenticationManagerBuilder.authenticationProvider(this.authenticationProvider());
         return authenticationManagerBuilder.build();
     }
-
 
     // Encodage/Cryptage de la clé de sécurité
     @Bean

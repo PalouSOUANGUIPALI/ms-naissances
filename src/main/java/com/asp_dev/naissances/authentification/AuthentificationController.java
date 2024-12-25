@@ -31,6 +31,15 @@ public class AuthentificationController {
     }
 
     /*
+      Connxion de profile/utilisateur
+      @Params : Map<String, String> login
+      @Return : void
+   */
+    @PostMapping(path = "sign-in")
+    public void login(@RequestBody Map<String, String> loginProfile) {
+    }
+
+    /*
      Activation du profile avec le code à six chiffres
      @Params : Map<String, String>
      @Return : void
