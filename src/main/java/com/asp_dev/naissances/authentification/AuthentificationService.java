@@ -1,7 +1,6 @@
 package com.asp_dev.naissances.authentification;
 
 import com.asp_dev.naissances.notifications.EmailServices;
-import com.asp_dev.naissances.notifications.Mailpitclient;
 import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
 import com.asp_dev.naissances.profiles.entities.Profiles;
 import com.asp_dev.naissances.profiles.entities.Roles;
@@ -15,6 +14,9 @@ import com.asp_dev.naissances.shared.services.AddressService;
 import com.asp_dev.naissances.shared.services.ValidationsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,7 @@ import java.util.Map;
 @Slf4j
 @AllArgsConstructor
 @Service
-public class AuthentificationService {
+public class AuthentificationService implements UserDetailsService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ValidationsService validationsService;
@@ -94,5 +96,11 @@ public class AuthentificationService {
         Profiles profiles = this.activationsService.validateAccountCodeAndReturnProfile(activationCode);
         profiles.setActive(true);
         this.profilesRepository.save(profiles);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return this.profilesRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("Auncun utilisateur ne correspond aux critères saisis"));
     }
 }
