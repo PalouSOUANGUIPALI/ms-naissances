@@ -4,7 +4,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    database-platform: org.hibernate.dialect.MySQLDialect
+    #database-platform: org.hibernate.dialect.MySQLDialect
   jackson:
     default-property-inclusion: non_null
     serialization:
@@ -12,4 +12,9 @@ spring:
 server:
   servlet:
     context-path: /api
+  port: 9191
+rsa:
+  private-key: classpath:certs/private_key_pkcs8.pem
+  public-key: classpath:certs/public_key.pem
+
 
