@@ -1,6 +1,7 @@
 package com.asp_dev.naissances.authentification;
 
 import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
+import com.asp_dev.naissances.security.token.JWTService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class AuthentificationController {
 
     private final AuthentificationService authentificationService;
     private final AuthenticationManager authenticationManager;
+    private final JWTService jwtService;
 
     /*
        Creation de profile
@@ -41,17 +43,19 @@ public class AuthentificationController {
       @Return : void
    */
     @PostMapping(path = "sign-in")
-    public void login(@RequestBody Map<String, String> connectionParameters) {
+    public @ResponseBody Map<String, String> login(@RequestBody Map<String, String> connectionParameters) {
         Authentication authentification = this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         connectionParameters.get("email"),
                         connectionParameters.get("password"))
                 );
-        log.info("Utilisateur connecté est : {}", authentification.getName());
+        String bearer = jwtService.generateToken(authentification);
+
+        return Map.of("bearer", bearer);
     }
 
     /*
-     Activation du profile avec le code à six chiffres
+     Activation du profile avec le code à six chiffres envoyé sur la boîte mail du user
      @Params : Map<String, String>
      @Return : void
   */
