@@ -61,4 +61,14 @@ public class ProfilesService {
         Profiles profiles = this.searchOneProfile(id);
         this.profilesRepository.delete(profiles);
     }
+
+    public Profiles createIfNotExist(Profiles profiles) {
+        Optional<Profiles> optionalProfiles = this.profilesRepository.findByEmail(profiles.getEmail());
+        if(optionalProfiles.isEmpty()) {
+            profiles = this.profilesRepository.save(profiles);
+        }else {
+            profiles = optionalProfiles.get();
+        }
+        return profiles;
+    }
 }
