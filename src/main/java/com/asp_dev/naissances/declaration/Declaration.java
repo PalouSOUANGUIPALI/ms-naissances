@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Builder
@@ -44,6 +45,8 @@ public class Declaration {
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     private Company company;
 
+    @OneToMany(mappedBy = "declaration", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private List<DeclarationStatus> statuses;
 
 }
 

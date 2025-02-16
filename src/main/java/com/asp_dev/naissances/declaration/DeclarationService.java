@@ -4,7 +4,6 @@ import com.asp_dev.naissances.profiles.entities.Profiles;
 import com.asp_dev.naissances.profiles.services.ProfilesService;
 import com.asp_dev.naissances.security.services.SecurityService;
 import com.asp_dev.naissances.shared.entities.Company;
-import com.asp_dev.naissances.shared.repository.CompaniesRepository;
 import com.asp_dev.naissances.shared.services.CompaniesService;
 import com.asp_dev.naissances.shared.services.StatusService;
 import lombok.AllArgsConstructor;
