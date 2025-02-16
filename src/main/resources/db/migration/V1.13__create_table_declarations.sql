@@ -13,7 +13,7 @@ create table declarations
     constraint fk_declarations_children foreign key(child_id) references profiles(id),
     constraint fk_declarations_first_parent foreign key(first_parent_id) references profiles(id),
     constraint fk_declarations_second_parent foreign key(second_parent_id) references profiles(id),
-    constraint fk_declarations_company foreign key(company_id) references cityhalls(id)
+    constraint fk_declarations_company foreign key(company_id) references companies(id)
 );
 
 

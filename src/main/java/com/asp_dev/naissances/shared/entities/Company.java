@@ -21,7 +21,7 @@ public class Company {
     private String name;
     private String description;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH })
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE })
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 

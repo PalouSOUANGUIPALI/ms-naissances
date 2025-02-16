@@ -22,7 +22,7 @@ public class SecurityService {
                         .getAuthentication()
                         .getPrincipal();
         String email = jwt.getSubject();
-        Optional<Profiles> profiles = profilesRepository.findByEmail(email);
-        return profiles.orElseThrow(() -> new RuntimeException("Aucune response ne correspond aux paramètres fournis"));
+        Optional<Profiles> profilesOptional = profilesRepository.findByEmail(email);
+        return profilesOptional.orElseThrow(() -> new RuntimeException("Aucune response ne correspond aux paramètres fournis"));
     }
 }
