@@ -1,0 +1,1 @@
+alter table declarations_status rename column agent_id to agents_id;

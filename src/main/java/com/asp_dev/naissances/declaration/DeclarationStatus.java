@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "declaration_status")
+@Table(name = "declarations_status")
 public class DeclarationStatus {
 
     @Id
@@ -26,7 +26,7 @@ public class DeclarationStatus {
     private LocalDateTime registered;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
-    @JoinColumn(name = "declaration_id")
+    @JoinColumn(name = "declarations_id")
     private Declaration declaration;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
@@ -34,7 +34,7 @@ public class DeclarationStatus {
     private Status status;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
-    @JoinColumn(name = "agent_id")
+    @JoinColumn(name = "agents_id")
     private Profiles agent;
 
 }

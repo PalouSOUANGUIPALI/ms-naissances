@@ -2,9 +2,8 @@ package com.asp_dev.naissances.declaration;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +12,15 @@ import java.util.List;
 @RestController
 @RequestMapping("declarations")
 public class DeclarationController {
+    private final DeclarationService declarationService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Declaration> search(String query) {
         return new ArrayList<>();
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void create(@RequestBody Declaration declaration) {
+        this.declarationService.create(declaration);
     }
 }
