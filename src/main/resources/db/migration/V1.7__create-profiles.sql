@@ -12,4 +12,5 @@ create table profiles
     creation datetime default current_timestamp,
     addresses_id int,
     constraint fk_profiles_addresses foreign key(addresses_id) references addresses(id)
+
 );

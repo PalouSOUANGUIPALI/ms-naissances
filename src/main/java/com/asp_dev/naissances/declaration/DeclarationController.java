@@ -15,7 +15,7 @@ public class DeclarationController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Declaration> search(String query) {
-        return new ArrayList<>();
+        return this.declarationService.search();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
