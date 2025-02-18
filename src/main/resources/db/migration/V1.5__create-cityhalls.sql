@@ -1,3 +1,4 @@
+
 -- Création de la table cityhalls
 create table cityhalls
 (

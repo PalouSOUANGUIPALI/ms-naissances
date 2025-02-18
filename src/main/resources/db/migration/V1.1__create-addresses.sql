@@ -1,3 +1,4 @@
+
 -- Création de la table adresses
 create table addresses
 (

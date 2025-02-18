@@ -1,10 +1,10 @@
--- Insérer les adresses dans la table `addresses`
-INSERT INTO addresses (street, zip, city, country, tag)
+-- Insertion des données dans la table addresses
+INSERT INTO addresses (`tag`,`street`,`zip`,`city`,`country`)
 VALUES
-    ('486 Canarsie Road', 154, 'Emory', 'Nebraska', 'COMPANY'),
-    ('288 Troutman Street', 356, 'Corinne', 'Palau', 'COMPANY'),
-    ('113 Kay Court', 838, 'Nicholson', 'Kansas', 'CITY_HALL'),
-    ('737 Kansas Place', 409, 'Morgandale', 'Virginia', 'CITY_HALL'),
-    ('885 Lawrence Street', 549, 'Glenville', 'Oregon', 'COMPANY'),
-    ('766 Folsom Place', 315, 'Weeksville', 'Puerto Rico', 'CITY_HALL'),
-    ('933 Glenmore Avenue', 217, 'Lowell', 'Massachusetts', 'COMPANY');
+    ('CITY_HALL','432 Fleet Walk',686,'Osage','Kansas'),
+    ('COMPANY','923 Prospect Street',112,'Watrous','Connecticut'),
+    ('COMPANY','504 Harbor Lane',434,'Alafaya','Guam'),
+    ('CITY_HALL','366 Cobek Court',666,'Gallina','New Hampshire'),
+    ('COMPANY','162 Cass Place',657,'Winston','Virgin Islands'),
+    ('CITY_HALL','539 Strickland Avenue',182,'Abrams','Puerto Rico'),
+    ('COMPANY','212 Village Court',677,'Hilltop','North Dakota');

@@ -1,11 +1,15 @@
--- Creation de la table activations des profiles avec l'envoi du code par email
-create table activations(
-    id int auto_increment,
-    activation_user_code_to_persist varchar(200),
-    activation_status boolean,
-    creation datetime default current_timestamp,
-    desactivation datetime,
-    profiles_id int,
-    constraint fk_activations_profiles foreign key(profiles_id) references profiles(id),
-    primary key (id)
-)
+-- Création de la table cityhalls
+create table status
+(
+    id int auto_increment primary key,
+    name varchar(255),
+    description text,
+    creation datetime default current_timestamp
+);
+
+INSERT INTO status (`name`)
+VALUES
+    ('NEW'),
+    ('ON_GOING'),
+    ('REJECTED'),
+    ('VALIDATED');

@@ -1,0 +1,1 @@
+alter table profiles rename column brithDate to birth_date;

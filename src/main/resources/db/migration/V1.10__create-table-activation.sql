@@ -1,3 +1,10 @@
-alter table profiles add column active boolean;
-alter table profiles add column roles_id int;
-alter table profiles add constraint fk_profiles_roles foreign key (roles_id) references roles(id);
+create table activations (
+                             id int primary key auto_increment,
+                             activation_user_code_to_persist varchar(200),
+                             activation_status boolean,
+                             creation datetime default current_timestamp,
+                             desactivation datetime,
+                             profiles_id int,
+                             constraint fk_activations_profiles foreign key(profiles_id) references profiles(id)
+
+);
