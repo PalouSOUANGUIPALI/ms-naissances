@@ -1,4 +1,4 @@
--- Création de la table cityhalls
+-- Création de la table roles
 create table roles
 (
     id int auto_increment primary key,
@@ -12,7 +12,7 @@ values ('AGENT'),
        ('ADMINISTRATOR'),
        ('PUBLIC');
 
--- Création de la table cityhalls
+-- Création de la table permissions
 create table permissions
 (
     id int auto_increment primary key,
@@ -53,7 +53,7 @@ values ('AGENT_CREATE'),
 ;
 
 
--- Création de la table cityhalls
+-- Création de la table roles_permissions
 create table roles_permissions
 (
     id int auto_increment primary key,
@@ -133,11 +133,10 @@ values
     ((select  id from roles where  name = 'PUBLIC'), (select  id from permissions where  name = 'DECLARATION_CREATE')),
     ((select  id from roles where  name = 'PUBLIC'), (select  id from permissions where  name = 'DECLARATION_READ')),
     ((select  id from roles where  name = 'PUBLIC'), (select  id from permissions where  name = 'DECLARATION_UPDATE')),
-    ((select  id from roles where  name = 'PUBLIC'), (select  id from permissions where  name = 'PDECLARATION_DELETE')),
+    ((select  id from roles where  name = 'PUBLIC'), (select  id from permissions where  name = 'DECLARATION_DELETE')),
 
     ((select  id from roles where  name = 'PUBLIC'), (select  id from permissions where  name = 'REQUEST_CREATE')),
     ((select  id from roles where  name = 'PUBLIC'), (select  id from permissions where  name = 'REQUEST_READ')),
     ((select  id from roles where  name = 'PUBLIC'), (select  id from permissions where  name = 'REQUEST_UPDATE')),
     ((select  id from roles where  name = 'PUBLIC'), (select  id from permissions where  name = 'REQUEST_DELETE'))
-
 ;
