@@ -2,7 +2,9 @@ package com.asp_dev.naissances.profiles.services;
 
 import com.asp_dev.naissances.profiles.dto.ProfilesDTO;
 import com.asp_dev.naissances.profiles.entities.Profiles;
+import com.asp_dev.naissances.profiles.entities.Roles;
 import com.asp_dev.naissances.profiles.mappingDtoToObject.ProfilesMapper;
+import com.asp_dev.naissances.profiles.repository.RolesRepository;
 import com.asp_dev.naissances.shared.exceptions.ProfilesNotFoundException;
 import com.asp_dev.naissances.profiles.repository.ProfilesRepository;
 import com.asp_dev.naissances.shared.services.AddressService;
@@ -24,6 +26,7 @@ public class ProfilesService {
     private final AddressService addressService;
     private final ProfilesRepository profilesRepository;
     private final ProfilesMapper profilesMapper;
+    private final RolesRepository rolesRepository;
 
 
     public Set<ProfilesDTO> search() {
@@ -65,7 +68,9 @@ public class ProfilesService {
     public Profiles createIfNotExist(Profiles profiles) {
         Optional<Profiles> optionalProfiles = this.profilesRepository.findByEmail(profiles.getEmail());
         if(optionalProfiles.isEmpty()) {
-            profiles = this.profilesRepository.save(profiles);
+            Roles roles = this.rolesRepository.findByName("PUBLIC");
+            profiles.setRoles(roles);
+                    profiles = this.profilesRepository.save(profiles);
         }else {
             profiles = optionalProfiles.get();
         }

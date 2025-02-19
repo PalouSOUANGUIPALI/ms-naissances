@@ -48,6 +48,9 @@ public class Profiles implements UserDetails{
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
+        if(this.roles == null) {
+            return authorities;
+        }
         // Ajout du role
         authorities.add(new SimpleGrantedAuthority("ROLE_" + this.getRoles().getName().toUpperCase()));
 

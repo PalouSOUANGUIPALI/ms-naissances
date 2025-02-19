@@ -58,7 +58,7 @@ public class AuthentificationService implements UserDetailsService {
         profiles.setPassword(hashedPassword);
 
         // Chercher les roles enregistrés dans la base de données en amont
-        // Ici, le role "PUBLIC" étant considéré comme role par défaut
+        // Ici, le role "PUBLIC" étant ");considéré comme role par défaut
         Roles roles = this.rolesRepository.findByName("PUBLIC");
 
         // Ajouter le role au profil
