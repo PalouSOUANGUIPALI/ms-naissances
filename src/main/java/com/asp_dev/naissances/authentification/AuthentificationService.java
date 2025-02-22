@@ -40,7 +40,7 @@ public class AuthentificationService implements UserDetailsService {
 
     // Méthode de création de profile
     public Profiles create(ProfilesDTO profilesDTO) {
-        log.info("l'email du nouveau profile {} ", profilesDTO.email());
+        log.info("l'email du nouveau profile {} ", profilesDTO.getEmail());
 
         // Mapping du dto en objet
         Profiles profiles = this.profilesMapper.dtoToEntity(profilesDTO);

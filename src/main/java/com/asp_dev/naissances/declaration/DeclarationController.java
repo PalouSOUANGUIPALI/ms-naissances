@@ -14,7 +14,7 @@ public class DeclarationController {
     private final DeclarationService declarationService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Declaration> search(String query) {
+    public List<DeclarationDto> search(String query) {
         return this.declarationService.search();
     }
 

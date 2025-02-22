@@ -9,24 +9,27 @@ public class ProfilesMapper {
 
     public Profiles dtoToEntity(ProfilesDTO dto) {
         Profiles entity = new Profiles();
-        entity.setEmail(dto.email());
-        entity.setFirstName(dto.firstName());
-        entity.setLastName(dto.lastName());
-        entity.setPassword(dto.password());
-        entity.setPhone(dto.phone());
-        entity.setCivility(dto.civility());
+        entity.setEmail(dto.getEmail());
+        entity.setFirstName(dto.getFirstName());
+        entity.setLastName(dto.getLastName());
+        entity.setPassword(dto.getPassword());
+        entity.setPhone(dto.getPhone());
+        //entity.setCivility(dto.getCivility());
         //entity.setAddress(dto.address());
         return entity;
     }
 
     public ProfilesDTO entityToDto(Profiles entity) {
-        return new ProfilesDTO(
-                entity.getCivility(),
-                entity.getFirstName(),
-                entity.getLastName(),
-                entity.getEmail(),
-                entity.getPhone(),
-                null
-        );
+        return ProfilesDTO
+                .builder()
+                .civility(entity.getCivility())
+                .email(entity.getEmail())
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
+                .phone(entity.getPhone())
+                .password(entity.getPassword())
+                .birthDate(entity.getBirthDate())
+                .role(entity.getRoles().getName())
+                .build();
     }
 }

@@ -62,22 +62,23 @@ public class ProfilesControllerTest {
         // Initialisation des profils fictifs pour le test testGetAllProfiles
         mockProfiles = new HashSet<>();
 
-        ProfilesDTO profile1 = new ProfilesDTO(
-                Civility.MR,
-                "John",
-                "Doe",
-                "john.doe@example.com",
-                "1234567890",
-                "password123"
-        );
-        ProfilesDTO profile2 = new ProfilesDTO(
-                Civility.MR,
-                "Jane",
-                "Doe",
-                "jane.doe@example.com",
-                "0987654321",
-                "password456"
-        );
+        ProfilesDTO profile1 = ProfilesDTO.builder()
+                .civility(Civility.MR)
+                .firstName("John")
+                .lastName("Doe")
+                .email("john.doe@example.com")
+                .phone("1234567890")
+                .password("password123")
+                .build();
+        ProfilesDTO profile2 = ProfilesDTO.builder()
+                .civility(Civility.MR)
+                .firstName("John")
+                .lastName("Doe")
+                .email("john.doe@example.com")
+                .phone("1234567890")
+                .password("password123")
+                .build();
+
         mockProfiles.add(profile1);
         mockProfiles.add(profile2);
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -23,6 +24,7 @@ public class DeclarationService {
     private final StatusService statusService;
     private final SecurityService securityService;
     private final DeclarationStatusRepository declarationStatusRepository;
+    private final DeclarationsMapper declarationsMapper;
 
 
 
@@ -59,7 +61,9 @@ public class DeclarationService {
     }
 
 
-    public List<Declaration> search() {
-        return this.declarationRepository.findAll();
+    public List<DeclarationDto> search() {
+        List<Declaration> declarations = this.declarationRepository.findAll();
+        return declarations.stream().map(declarationsMapper::entityToDTO).collect(Collectors.toList());
+
     }
 }

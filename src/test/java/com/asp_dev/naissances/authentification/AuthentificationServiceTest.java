@@ -43,14 +43,14 @@ class AuthentificationServiceTest {
         MockitoAnnotations.openMocks(this);
 
         // Initialisation d'un ProfilesDTO avec les propriétés nécessaires pour le test
-        profilesDTO = new ProfilesDTO(
-                Civility.MR, // Exemple de civilité
-                "John",      // Prénom
-                "Doe",       // Nom de famille
-                "john.doe@example.com", // Email
-                "0123456789", // Numéro de téléphone
-                "securePassword" // Mot de passe
-        );
+        profilesDTO = ProfilesDTO.builder()
+                .civility(Civility.MR)
+                .firstName("John")
+                .lastName("Doe")
+                .email("john.doe@example.com")
+                .phone("1234567890")
+                .password("password123")
+                .build();
 
         // Utilisation du Builder pour créer l'objet Profiles sans l'adresse
         profiles = Profiles.builder()
@@ -64,7 +64,7 @@ class AuthentificationServiceTest {
 
         // Simulation des comportements des mocks
         when(profilesMapper.dtoToEntity(profilesDTO)).thenReturn(profiles);
-        when(bCryptPasswordEncoder.encode(profilesDTO.password())).thenReturn("hashedPassword");
+        when(bCryptPasswordEncoder.encode(profilesDTO.getPassword())).thenReturn("hashedPassword");
     }
 
     @Test
@@ -92,8 +92,8 @@ class AuthentificationServiceTest {
         assertEquals(savedProfile.getPassword(), "hashedPassword"); // Vérifier que le mot de passe est bien haché
 
         // Vérification des appels aux services de validation
-        verify(validationsService).validateEmail(profilesDTO.email()); // Vérifier que l'email a été validé
-        verify(validationsService).validatePhoneNumber(profilesDTO.phone()); // Vérifier que le téléphone a été validé
+        verify(validationsService).validateEmail(profilesDTO.getEmail()); // Vérifier que l'email a été validé
+        verify(validationsService).validatePhoneNumber(profilesDTO.getPhone()); // Vérifier que le téléphone a été validé
     }
 
     @Test
@@ -102,14 +102,14 @@ class AuthentificationServiceTest {
 
         // Arrange
         // Création d'un ProfilesDTO sans adresse
-        ProfilesDTO profilesDTOWithoutAddress = new ProfilesDTO(
-                Civility.MR, // Civilité
-                "Jane",      // Prénom
-                "Doe",       // Nom de famille
-                "jane.doe@example.com", // Email
-                "0123456789", // Numéro de téléphone
-                "securePassword" // Mot de passe
-        );
+        ProfilesDTO profilesDTOWithoutAddress = ProfilesDTO.builder()
+                .civility(Civility.MR)
+                .firstName("John")
+                .lastName("Doe")
+                .email("john.doe@example.com")
+                .phone("1234567890")
+                .password("password123")
+                .build();
 
         // Création d'un profil sans adresse
         Profiles profilesWithoutAddress = Profiles.builder()
@@ -138,7 +138,7 @@ class AuthentificationServiceTest {
         // Vérifications des valeurs enregistrées
         assertNotNull(savedProfile); // Vérifier que le profil n'est pas null
         assertNull(savedProfile.getAddress());  // Vérifier que l'adresse est bien absente
-        verify(validationsService).validateEmail(profilesDTOWithoutAddress.email()); // Vérifier la validation de l'email
-        verify(validationsService).validatePhoneNumber(profilesDTOWithoutAddress.phone()); // Vérifier la validation du téléphone
+        verify(validationsService).validateEmail(profilesDTOWithoutAddress.getEmail()); // Vérifier la validation de l'email
+        verify(validationsService).validatePhoneNumber(profilesDTOWithoutAddress.getPhone()); // Vérifier la validation du téléphone
     }
 }

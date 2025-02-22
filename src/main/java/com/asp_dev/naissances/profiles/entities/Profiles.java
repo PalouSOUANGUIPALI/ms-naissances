@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -33,6 +34,7 @@ public class Profiles implements UserDetails{
     private String email;
     private String phone;
     private String password;
+    private LocalDateTime birthDate;
     private Boolean active = false;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
