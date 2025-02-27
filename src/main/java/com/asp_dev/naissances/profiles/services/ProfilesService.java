@@ -5,6 +5,7 @@ import com.asp_dev.naissances.profiles.entities.Profiles;
 import com.asp_dev.naissances.profiles.entities.Roles;
 import com.asp_dev.naissances.profiles.mappingDtoToObject.ProfilesMapper;
 import com.asp_dev.naissances.profiles.repository.RolesRepository;
+import com.asp_dev.naissances.security.services.SecurityService;
 import com.asp_dev.naissances.shared.exceptions.ProfilesNotFoundException;
 import com.asp_dev.naissances.profiles.repository.ProfilesRepository;
 import com.asp_dev.naissances.shared.services.AddressService;
@@ -27,6 +28,7 @@ public class ProfilesService {
     private final ProfilesRepository profilesRepository;
     private final ProfilesMapper profilesMapper;
     private final RolesRepository rolesRepository;
+    private SecurityService securityService;
 
 
     public Set<ProfilesDTO> search() {
@@ -75,5 +77,10 @@ public class ProfilesService {
             profiles = optionalProfiles.get();
         }
         return profiles;
+    }
+
+    public ProfilesDTO getCurrentUser() {
+        Profiles profile = this.securityService.getCurrentUser();
+        return this.profilesMapper.entityToDto(profile);
     }
 }

@@ -27,7 +27,7 @@ public class ProfilesMapper {
                 .firstName(entity.getFirstName())
                 .lastName(entity.getLastName())
                 .phone(entity.getPhone())
-                .password(entity.getPassword())
+                //.password(entity.getPassword())
                 .birthDate(entity.getBirthDate())
                 .role(entity.getRoles().getName())
                 .build();
