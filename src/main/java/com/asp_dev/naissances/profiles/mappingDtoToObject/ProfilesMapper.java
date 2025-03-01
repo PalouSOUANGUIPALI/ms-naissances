@@ -20,7 +20,7 @@ public class ProfilesMapper {
     }
 
     public ProfilesDTO entityToDto(Profiles entity) {
-        return ProfilesDTO
+       ProfilesDTO profilesDTO =  ProfilesDTO
                 .builder()
                 .civility(entity.getCivility())
                 .email(entity.getEmail())
@@ -29,7 +29,11 @@ public class ProfilesMapper {
                 .phone(entity.getPhone())
                 //.password(entity.getPassword())
                 .birthDate(entity.getBirthDate())
-                .role(entity.getRoles().getName())
+                //.role(entity.getRoles().getName())
                 .build();
+       if (entity.getRoles() != null) {
+           profilesDTO.setRole(entity.getRoles().getName());
+       }
+       return profilesDTO;
     }
 }

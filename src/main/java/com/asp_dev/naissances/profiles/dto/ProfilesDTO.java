@@ -1,10 +1,7 @@
 package com.asp_dev.naissances.profiles.dto;
 
 import com.asp_dev.naissances.profiles.emuns.Civility;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Builder
+@Setter
 public class ProfilesDTO{
     Civility civility;
     String firstName;

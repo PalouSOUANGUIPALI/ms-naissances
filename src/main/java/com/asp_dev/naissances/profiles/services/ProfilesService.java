@@ -12,6 +12,7 @@ import com.asp_dev.naissances.shared.services.AddressService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -68,6 +69,9 @@ public class ProfilesService {
     }
 
     public Profiles createIfNotExist(Profiles profiles) {
+        if(StringUtils.isEmpty(profiles.getEmail())) {
+            return this.profilesRepository.save(profiles);
+        }
         Optional<Profiles> optionalProfiles = this.profilesRepository.findByEmail(profiles.getEmail());
         if(optionalProfiles.isEmpty()) {
             Roles roles = this.rolesRepository.findByName("PUBLIC");
