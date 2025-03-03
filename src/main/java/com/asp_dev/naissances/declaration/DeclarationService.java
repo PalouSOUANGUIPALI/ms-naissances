@@ -62,7 +62,15 @@ public class DeclarationService {
 
 
     public List<DeclarationDto> search() {
-        List<Declaration> declarations = this.declarationRepository.findAll();
+        Profiles currentUser = this.securityService.getCurrentUser();
+        String email = currentUser.getEmail();
+        String role = currentUser.getRoles().getName();
+        List<Declaration> declarations;
+        if (role.equals("ADMINISTRATOR") || role.equals("AGENT")) {
+            declarations = this.declarationRepository.findAll();
+        } else {
+            declarations = this.declarationRepository.findCurrentUserDeclarations(email);
+        }
         return declarations.stream().map(declarationsMapper::entityToDTO).collect(Collectors.toList());
 
     }
