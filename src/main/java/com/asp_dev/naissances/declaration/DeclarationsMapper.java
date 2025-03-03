@@ -11,6 +11,7 @@ public class DeclarationsMapper {
 
     public DeclarationDto entityToDTO(Declaration declaration) {
         return DeclarationDto.builder()
+                .id(declaration.getId())
                 .name(declaration.getName())
                 .comment(declaration.getComment())
                 .description(declaration.getDescription())

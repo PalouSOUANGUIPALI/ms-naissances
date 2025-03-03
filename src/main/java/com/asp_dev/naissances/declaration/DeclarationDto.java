@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 @Getter
 public class DeclarationDto {
+    private int id;
     private String name;
     private String description;
     private String comment;
