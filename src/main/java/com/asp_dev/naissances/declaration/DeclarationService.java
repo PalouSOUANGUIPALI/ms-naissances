@@ -65,6 +65,7 @@ public class DeclarationService {
         Profiles currentUser = this.securityService.getCurrentUser();
         String email = currentUser.getEmail();
         String role = currentUser.getRoles().getName();
+
         List<Declaration> declarations;
         if (role.equals("ADMINISTRATOR") || role.equals("AGENT")) {
             declarations = this.declarationRepository.findAll();
@@ -73,5 +74,19 @@ public class DeclarationService {
         }
         return declarations.stream().map(declarationsMapper::entityToDTO).collect(Collectors.toList());
 
+    }
+
+    public void updateStatus(int id, Map<String, String> parameters) {
+        Declaration declaration = this.declarationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Entité indisponible"));
+
+        Status status = this.statusService.search(Map.of("name", parameters.get("status")));
+
+        DeclarationStatus declarationStatus = DeclarationStatus.builder()
+                .status(status)
+                .declaration(declaration)
+                .registered(LocalDateTime.now())
+                .build();
+        this.declarationStatusRepository.save(declarationStatus);
     }
 }
