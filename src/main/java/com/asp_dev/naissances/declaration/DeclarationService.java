@@ -1,5 +1,6 @@
 package com.asp_dev.naissances.declaration;
 
+import com.asp_dev.naissances.notifications.EmailServices;
 import com.asp_dev.naissances.profiles.entities.Profiles;
 import com.asp_dev.naissances.profiles.services.ProfilesService;
 import com.asp_dev.naissances.security.services.SecurityService;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Service
 public class DeclarationService {
+    private final EmailServices emailServices;
     private final DeclarationRepository declarationRepository;
     private final CompaniesService companiesService;
     private final ProfilesService profilesService;
@@ -87,6 +89,7 @@ public class DeclarationService {
                 .declaration(declaration)
                 .registered(LocalDateTime.now())
                 .build();
-        this.declarationStatusRepository.save(declarationStatus);
+        declarationStatus = this.declarationStatusRepository.save(declarationStatus);
+        this.emailServices.sendStatusNotification(declarationStatus);
     }
 }
