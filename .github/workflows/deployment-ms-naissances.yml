@@ -1,0 +1,14 @@
+name: deploy application ms-naissances
+run-name: ${{ github.actor }} is deploying project 🚀
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  create-folder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: List files in the repository
+        run: |
+          ls -al ${{ github.workspace }}
